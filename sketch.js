@@ -27,30 +27,32 @@ function setup() {
 
 let x;
 let parts = [];
+
+let shape, size;
 function draw() {
     background(255);
+    shape = shapeslider.value();
+    size = sizeslider.value();
     for(let p of parts)   {
         p.show();
         p.drop();
     }
     let rval = radio.value();
     x = mouseX - width/2;
-//    if(press == true && rval == "draw") {
-//        translate(width/2, height/2);
-//        for(let i = 0; i < reps; i ++) {
-//            rotate(radians(angle));
-//            let shape = shapeslider.value();
-//            let size = sizeslider.value();
-//            noFill()
-//            stroke(0)
-//            //ellipse(mouseX-width/2, mouseY-height/2, 50);
-//            makeShape(shape, size, mouseX - width/2, mouseY-height/2, 'draw');
-//            push();
-//            scale(-1, 1);
-//            makeShape(shape, size, mouseX - width/2, mouseY-height/2, 'draw');
-//            pop();
-//        }
-//    }
+    if(press == true) {
+        translate(width/2, height/2);
+        for(let i = 0; i < reps; i ++) {
+            rotate(radians(angle));
+            noFill()
+            stroke(0)
+            //ellipse(mouseX-width/2, mouseY-height/2, 50);
+            makeShape(shape, size, mouseX - width/2, mouseY-height/2, 'draw');
+            push();
+            scale(-1, 1);
+            makeShape(shape, size, mouseX - width/2, mouseY-height/2, 'draw');
+            pop();
+        }
+    }
     //print(val);
 }
 
@@ -88,21 +90,58 @@ function makeShape(shape, size, x, y, type) {
 
 class Shape {
     constructor(shape, size, x, y, type) {
+        this.r = size;
         this.shape = shape;
-        this.size = size;
         this.x = x;
         this.y = y;
     }
     show(){
-        
+        fill(130, 150, 170, 20)
+        noStroke();
+        push();
+        translate(x, y);
+    
+        if(this.shape < 2) {
+            ellipse(0, 0, this.r);
+        }
+        else if(this.shape < 3) {
+            push();
+            strokeWeight(5);
+            stroke(0, 0, 0, 10);
+            line(-this.r/2, -this.r/2, +this.r/2, +this.r/2);
+            pop();
+        }
+        else {
+            beginShape();
+            for(let i = 0; i < TWO_PI; i += TWO_PI/this.shape) {
+                let x = this.r * sin(i);
+                let y = this.r * cos(i);
+                vertex(x, y);
+            }
+        endShape(CLOSE);
+        }
+        pop();
     }
     drop(){
-        
+        if(this.x > width/2) {
+            this.x -= this.sx;
+        }
+        if(this.x < width/2) {
+            this.x += this.sx;
+        }
+        if(this.y > height/2) {
+            this.y -= this.sy;
+        }
+        if(this.y < height/2) {
+            this.y += this.sy;
+        }
+        ellipse(this.x, this.y, 20)
     }
 }
-
+let totalr = 0;
 class Part {
-    constructor(x, y) {
+    constructor(shape, size, x, y) {
+        this.size = size;
         this.x = x;
         this.y = y;
         this.tox = abs(this.x-width/2);
@@ -119,7 +158,7 @@ class Part {
     }
     show() {
         fill(0)
-        ellipse(this.x, this.y, 20)
+        ellipse(this.x, this.y, this.size)
     }
     drop() {
         if(this.x > width/2) {
@@ -140,7 +179,7 @@ class Part {
 
 function mousePressed() {
     press = true;
-    let p = new Part(mouseX, mouseY);
+    let p = new Part(shape, size, mouseX, mouseY);
     parts.push(p);
 }
 function mouseReleased() {
