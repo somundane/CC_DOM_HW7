@@ -105,7 +105,17 @@ class Part {
     constructor(x, y) {
         this.x = x;
         this.y = y;
-        this.s = 4;
+        this.tox = abs(this.x-width/2);
+        this.toy = abs(this.y-height/2);
+        //time & speed consistency
+        if(this.tox > this.toy){
+            this.sx = 5;
+            this.sy = this.toy/(this.tox/5);
+        }
+        else if(this.toy > this.tox) {
+            this.sy = 5;
+            this.sx = this.tox/(this.toy/5);
+        }
     }
     show() {
         fill(0)
@@ -113,19 +123,18 @@ class Part {
     }
     drop() {
         if(this.x > width/2) {
-            this.x -= this.s;
+            this.x -= this.sx;
         }
         if(this.x < width/2) {
-            this.x += this.s;
+            this.x += this.sx;
         }
         if(this.y > height/2) {
-            this.y -= this.s;
+            this.y -= this.sy;
         }
         if(this.y < height/2) {
-            this.y += this.s;
+            this.y += this.sy;
         }
         ellipse(this.x, this.y, 20)
-
     }
 }
 
