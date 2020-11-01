@@ -141,6 +141,7 @@ class Shape {
 let totalr = 0;
 class Part {
     constructor(shape, size, x, y) {
+        this.shape = shape;
         this.size = size;
         this.x = x;
         this.y = y;
@@ -158,7 +159,29 @@ class Part {
     }
     show() {
         fill(0)
-        ellipse(this.x, this.y, this.size)
+        //ellipse(this.x, this.y, this.size)
+        if(this.shape < 2) {
+            ellipse(this.x, this.y, this.size);
+        }
+        else if(this.shape < 3) {
+            push();
+            strokeWeight(5);
+            stroke(0);
+            line(this.x-this.size/2, this.y-this.size/2, this.x+this.size/2, this.y+this.size/2);
+            pop();
+        }
+        else {
+            push();
+            translate(this.x, this.y);
+            beginShape();
+            for(let i = 0; i < TWO_PI; i += TWO_PI/this.shape) {
+                let x = this.size * sin(i);
+                let y = this.size * cos(i);
+                vertex(x, y);
+            }
+        endShape(CLOSE);
+            pop();
+        }
     }
     drop() {
         if(this.x > width/2) {
@@ -173,7 +196,8 @@ class Part {
         if(this.y < height/2) {
             this.y += this.sy;
         }
-        ellipse(this.x, this.y, 20)
+    
+        //ellipse(this.x, this.y, 20)
     }
 }
 
