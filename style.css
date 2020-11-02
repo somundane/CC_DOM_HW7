@@ -6,3 +6,26 @@ html, body {
 canvas {
  
 }
+h5 {
+    margin: 0;
+    text-align: center;
+    font-family: monospace;
+    font-size: 12px;
+}
+#coldiv {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#alldiv {
+    
+}
+#colpick {
+    margin-left: 10px;
+}
+#rad {
+    
+}
+#raddiv {
+    display: inline-block;
+}
