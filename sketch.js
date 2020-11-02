@@ -27,36 +27,74 @@ function setup() {
 
 let x;
 let parts = [];
+let draws = [];
 
 let shape, size;
 function draw() {
-    background(255);
     shape = shapeslider.value();
     size = sizeslider.value();
-    for(let p of parts)   {
-        p.show();
-        p.drop();
-    }
     let rval = radio.value();
-    x = mouseX - width/2;
-    if(press == true) {
-        translate(width/2, height/2);
-        for(let i = 0; i < reps; i ++) {
-            rotate(radians(angle));
-            noFill()
-            stroke(0)
-            //ellipse(mouseX-width/2, mouseY-height/2, 50);
-            makeShape(shape, size, mouseX - width/2, mouseY-height/2, 'draw');
-            push();
-            scale(-1, 1);
-            makeShape(shape, size, mouseX - width/2, mouseY-height/2, 'draw');
-            pop();
+    
+    if(rval == "drop") {
+        if(press==true){
+            let p = new Part(shape, size, mouseX, mouseY);
+            parts.push(p);
+        }
+        background(255);
+        for(let p of parts)   {
+            p.show();
+            p.drop();
         }
     }
+    else if(rval=="draw") {
+        background(255);
+        translate(width/2, height/2);
+            for(let i = 0; i < reps; i ++) {
+                rotate(radians(angle));
+                noFill()
+                stroke(0)
+                for(let d of draws)   {
+                    makeShape(d.sp, d.sz, d.x, d.y);
+                    push();
+                    scale(-1, 1);
+                    makeShape(d.sp, d.sz, d.x, d.y);
+                    pop();
+                }
+            }
+        if(press == true) {
+                //ellipse(mouseX-width/2, mouseY-height/2, 50);
+//                let p = new Part(shape, size, mouseX, mouseY);
+//                draws.push(p);
+//                
+//                push();
+//                scale(-1, 1);
+//                let p2 = new Part(shape, size, mouseX, mouseY);
+//                draws.push(p2);
+//                pop();
+                
+                //makeShape(shape, size, mouseX - width/2, mouseY-height/2, 'draw');
+                let d = {
+                    sp: shape,
+                    sz: size,
+                    x: mouseX - width/2,
+                    y: mouseY - height/2
+                }
+                draws.push(d);
+                
+//                push();
+//                scale(-1, 1);
+//                makeShape(shape, size, mouseX - width/2, mouseY-height/2, 'draw');
+//                pop();
+        
+        }
+    }
+    
+    //x = mouseX - width/2;
+
     //print(val);
 }
 
-function makeShape(shape, size, x, y, type) {
+function makeShape(shape, size, x, y) {
     let r = size;
     //noFill();
     fill(130, 150, 170, 20)
@@ -143,8 +181,6 @@ class Part {
     constructor(shape, size, x, y) {
         this.shape = shape;
         this.size = size;
-        this.startx = x;
-        this.starty = y;
         this.x = x;
         this.y = y;
         this.tox = abs(this.x-width/2);
@@ -160,11 +196,13 @@ class Part {
         }
     }
     show() { 
+        fill(130, 150, 170, 20)
+        noStroke();
         push();
         translate(width/2, height/2);
         for(let j = 0; j < reps; j ++) {
             rotate(radians(angle));
-            fill(0)
+            fill(130, 150, 170, 20)
             //ellipse(this.x, this.y, this.size)
             if(this.shape < 2) {
                 ellipse(this.x, this.y, this.size);
@@ -172,7 +210,7 @@ class Part {
             else if(this.shape < 3) {
                 push();
                 strokeWeight(5);
-                stroke(0);
+                fill(130, 150, 170, 20)
                 line(this.x-this.size/2, this.y-this.size/2, this.x+this.size/2, this.y+this.size/2);
                 pop();
             }
@@ -194,32 +232,46 @@ class Part {
     }
 
     drop() {
-        if(this.x > width/2) {
-            this.x -= this.sx;
+        for(let s of parts)   {
+            if(dist(this.x, this.y, s.x, s.y) > (this.size *2) + (s.size*2)) {
+                print(dist(this.x, this.y, s.x, s.y))
+                if(this.x > width/2) {
+                    this.x -= this.sx;
+                }
+                if(this.x < width/2) {
+                    this.x += this.sx;
+                }
+                if(this.y > height/2) {
+                    this.y -= this.sy;
+                }
+                if(this.y < height/2) {
+                    this.y += this.sy;
+                }
+            }
         }
-        if(this.x < width/2) {
-            this.x += this.sx;
-        }
-        if(this.y > height/2) {
-            this.y -= this.sy;
-        }
-        if(this.y < height/2) {
-            this.y += this.sy;
-        }
-    
         //ellipse(this.x, this.y, 20)
+    }
+    
+    touching(x, y, size) {
+        if(dist(this.x, this.y, x, y) <= this.size + size) {
+            return true;
+        }
+        else {
+            return false;
+        }
+        
     }
 }
 
 
 function mousePressed() {
     press = true;
-    let p = new Part(shape, size, mouseX, mouseY);
-    parts.push(p);
+//    let p = new Part(shape, size, mouseX, mouseY);
+//    parts.push(p);
 }
 function mouseReleased() {
     press = false;
 }
 function windowResized() {
-
+    resizeCanvas(windowWidth, windowHeight);
 }
