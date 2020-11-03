@@ -7,25 +7,37 @@ canvas {
  
 }
 h5 {
-    margin: 0;
+    margin: 5px 0px 0px 0px;
     text-align: center;
     font-family: monospace;
     font-size: 12px;
 }
-#coldiv {
+
+#alldiv {
+
+}
+#colpick {
     display: flex;
     align-items: center;
     justify-content: center;
-}
-#alldiv {
-    
-}
-#colpick {
-    margin-left: 10px;
+    margin: 5px auto 5px auto;
+
 }
 #rad {
-    
+    display: flex;
+    position: relative; 
+    margin-left: 45px;
+    padding-top: 5px;
 }
-#raddiv {
-    display: inline-block;
+
+#randdiv {
+    display: flex;
+    margin-left: 50px;
+    margin-top: 5px;
+}
+#btn {
+    display: flex;
+    position: relative;
+    margin-left: 45px;
+    margin-top: 5px;
 }
