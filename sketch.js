@@ -19,72 +19,68 @@ let clear, capture, btndiv;
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
+    //divs
     alldiv = createDiv();
     randdiv = createDiv();
     btndiv = createDiv();
     
+    //buttons
     clear = createButton('Clear');
     capture = createButton('Capture');
     clear.mousePressed(reset);
     capture.mousePressed(saveFile);
+    clear.class('buttons');
+    capture.class('buttons');
     btndiv.child(clear);
     btndiv.child(capture);
     btndiv.id('btn');
     
+    //sliders ++
     shapelabel = createElement('h5', 'Shape');
     shapeslider = createSlider(1, 15, 6, 0);
-    //shapeslider.position(windowWidth/2 - 100, windowHeight*0.75);
     shapeslider.style('width', '200px');
     
     shapediv = createDiv();
     shapediv.child(shapelabel);
     shapediv.child(shapeslider);
-    //shapediv.position(windowWidth/2 - 100, windowHeight*0.75);
     
     sizelabel = createElement('h5', 'Size');
     sizeslider = createSlider(1, 80, 20, 0);
-    //sizeslider.position(windowWidth/2 - 100, windowHeight*0.80);
     sizeslider.style('width', '200px');
     
     sizediv = createDiv();
     sizediv.child(sizelabel);
     sizediv.child(sizeslider);
-    //sizediv.position(windowWidth/2 - 100, windowHeight*0.80);
     
     opacitylabel = createElement('h5', 'Opacity');
     opacityslider = createSlider(1, 255, 20, 0);
-    //opacityslider.position(windowWidth/2 - 100, windowHeight*0.85);
     opacityslider.style('width', '200px');
     
     odiv = createDiv();
     odiv.child(opacitylabel);
     odiv.child(opacityslider);
-    //odiv.position(windowWidth/2 - 100, windowHeight*0.85);
     
     colorlabel = createElement('h5', 'Color');
     colorpicker = createColorPicker('rgb(130, 150, 170)');
     colorpicker.id('colpick');
-    //colorpicker.position(windowWidth/2 - 100, windowHeight*0.90)
     
-//    coldiv = createDiv();
-//    coldiv.child(colorlabel);
-//    coldiv.child(colorpicker);
-    //coldiv.position(windowWidth/2 - 100, windowHeight*0.90);
-    
+    //radios
     radiolabel = createElement('h5', 'Mode');
     radio = createRadio();
     radio.option('draw');
     radio.option('drop');
     radio.style('width', '60px');
-    //radio.position(windowWidth/2 - 100, windowHeight*0.95)
     radio.selected('draw')
     radio.id('rad');
     
+    //checkbox
     randlabel = createElement('h5', 'Random');
-    //raddiv.position(windowWidth/2 - 100, windowHeight*0.95)
     sizecheck = createCheckbox('Size', false);
     ccheck = createCheckbox('Color', false);
+    sizecheck.class('chkbox');
+    ccheck.class('chkbox');
     
+    //div nesting
     randdiv.id('randdiv');
     randdiv.child(sizecheck);
     randdiv.child(ccheck);
@@ -111,12 +107,8 @@ let shape, size, opacity, color;
 let time = 0;
 
 function reset() {
-    for(let p of parts) {
-        parts.pop(p);
-    }
-    for(let d of draws) {
-        draws.pop(d);
-    }
+    parts = []
+    draws = []
 }
 function saveFile() {
     save('kaleidoscope.png');
@@ -128,9 +120,24 @@ function draw() {
 
     //print(color.levels[3]);
     let rval = radio.value();
+    let indiv = mouseX > windowWidth/2 - 100 &&
+    mouseX <  windowWidth/2 + 100 &&
+    mouseY < windowHeight &&
+    mouseY > windowHeight*0.60;
     
+    let inbtn = mouseX > windowWidth/2 - 100 &&
+    mouseX <  windowWidth/2 + 100 &&
+    mouseY < windowHeight &&
+    mouseY > windowHeight*0.90;
+
+    if(press==true && !indiv){
+        alldiv.style('visibility', 'hidden');
+    }
+    else {
+         alldiv.style('visibility', 'visible');
+    }
     if(rval == "drop") {
-        if(press==true){
+        if(press==true && !inbtn){
             if(ccheck.checked()) {
                 if(millis() >= 500+time) {
                     color.levels[0] = random(255);
@@ -170,7 +177,7 @@ function draw() {
                     pop();
                 }
             }
-        if(press == true) {
+        if(press == true && !indiv) {
                 if(ccheck.checked()) {
                     if(millis() >= 500+time) {
                         color.levels[0] = random(255);
