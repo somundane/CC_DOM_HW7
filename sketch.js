@@ -125,7 +125,6 @@ function draw() {
     shape = shapeslider.value();
     size = sizeslider.value();
     opacity = opacityslider.value();
-    color = colorpicker.color();
 
     //print(color.levels[3]);
     let rval = radio.value();
@@ -140,6 +139,9 @@ function draw() {
                     time = millis();
                 }
                 print(color);
+            }
+            else {
+                color = colorpicker.color();
             }
             if(sizecheck.checked()) {
                 size = random(50);
@@ -177,6 +179,9 @@ function draw() {
                         time = millis();
                     }
                     print(color);
+                }
+                else {
+                     color = colorpicker.color();
                 }
                 if(sizecheck.checked()) {
                     size = random(80);
